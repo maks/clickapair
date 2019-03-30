@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+import 'package:vector_math/vector_math.dart' show radians;
 
 void main() => runApp(MyApp());
 
@@ -74,8 +76,9 @@ class GameCard extends StatelessWidget {
 class CardRow extends StatelessWidget {
   final int offset;
   final String cardName;
+  final rng = math.Random();
 
-  const CardRow({Key key, this.offset, this.cardName}) : super(key: key);
+  CardRow({Key key, this.offset, this.cardName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,11 +93,14 @@ class CardRow extends StatelessWidget {
   }
 
   Widget getCardItem(int index) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text("$cardName $index"),
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Transform.rotate(
+          angle: radians(randAngle()), child: Text("$cardName $index")),
     );
+  }
+
+  double randAngle() {
+    return rng.nextInt(360).toDouble();
   }
 }

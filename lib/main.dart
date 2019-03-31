@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart' show radians;
+import 'package:flutter_svg/svg.dart';
 
 void main() => runApp(MyApp());
 
@@ -98,10 +99,15 @@ class CardRow extends StatelessWidget {
       child: Transform.rotate(
         angle: radians(randAngle()),
         //child: Text("$cardName $index"),
-        child: Image.asset(
-          "images/apple.png",
+        // child: Image.asset(
+        //   "images/apple.png",
+        //   width: 40,
+        //   height: 30,
+        // ),
+        child: SvgPicture.asset(
+          "images/bell.svg",
           width: 40,
-          height: 30,
+          height: 40,
         ),
       ),
     );

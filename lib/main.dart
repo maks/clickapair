@@ -40,6 +40,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             GameCard(cardName: "A"),
+            Divider(
+              color: Colors.black,
+            ),
             GameCard(cardName: "B"),
           ],
         ),
@@ -98,16 +101,10 @@ class CardRow extends StatelessWidget {
       padding: const EdgeInsets.all(32.0),
       child: Transform.rotate(
         angle: radians(randAngle()),
-        //child: Text("$cardName $index"),
-        // child: Image.asset(
-        //   "images/apple.png",
-        //   width: 40,
-        //   height: 30,
-        // ),
         child: SvgPicture.asset(
           "images/bell.svg",
-          width: 40,
-          height: 40,
+          width: 30,
+          height: 30,
         ),
       ),
     );

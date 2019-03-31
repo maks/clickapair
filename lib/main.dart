@@ -96,7 +96,14 @@ class CardRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Transform.rotate(
-          angle: radians(randAngle()), child: Text("$cardName $index")),
+        angle: radians(randAngle()),
+        //child: Text("$cardName $index"),
+        child: Image.asset(
+          "images/apple.png",
+          width: 40,
+          height: 30,
+        ),
+      ),
     );
   }
 

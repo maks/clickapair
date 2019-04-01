@@ -6,6 +6,23 @@ void main() => runApp(MyApp());
 
 const name = 'Click-A-Pair';
 
+const images = [
+  "❤️️",
+  "🙂",
+  "🌻",
+  "🏝",
+  "⚡️",
+  "☘",
+  "☀️",
+  "🌏",
+  "🚀",
+  "🚲",
+  "🚢",
+  "🚦",
+  "🚗",
+  "🐧",
+];
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,6 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             GameCard(cardName: "A"),
+            Divider(
+              color: Colors.black,
+            ),
             GameCard(cardName: "B"),
           ],
         ),
@@ -96,11 +116,23 @@ class CardRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Transform.rotate(
-          angle: radians(randAngle()), child: Text("$cardName $index")),
+          angle: radians(randAngle()),
+          child: Text(
+            randImage(),
+            style: TextStyle(fontSize: randomFontSize()),
+          )),
     );
   }
 
   double randAngle() {
     return rng.nextInt(360).toDouble();
+  }
+
+  String randImage() {
+    return images[rng.nextInt(images.length)];
+  }
+
+  double randomFontSize() {
+    return ((rng.nextInt(4) + 2) * 6).toDouble();
   }
 }

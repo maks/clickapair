@@ -10,6 +10,11 @@ Inspired by "pica pair" which is itself based on "spot it".
 
 Artwork from [GCOmpris-gtk](https://github.com/gcompris/GCompris-gtk)
 
+The magic count:
+```
+find . -name "*.dart" | xargs cat | wc -c
+```
+
 ## Refs:
 
 https://www.google.com/search?q=spot+it+game+alogrithm&oq=spot+it+game+alogrithm

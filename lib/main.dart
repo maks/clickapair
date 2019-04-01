@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart' show radians;
-import 'package:flutter_svg/svg.dart';
 
 void main() => runApp(MyApp());
 
 const name = 'Click-A-Pair';
+
+const images = [
+  "❤️️",
+  "🙂",
+  "🌻",
+  "🏝",
+  "⚡️",
+  "☘",
+  "☀️",
+  "🌏",
+  "🚀",
+  "🚲",
+  "🚢",
+  "🚦",
+  "🚗",
+  "🐧",
+];
 
 class MyApp extends StatelessWidget {
   @override
@@ -100,17 +116,23 @@ class CardRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Transform.rotate(
-        angle: radians(randAngle()),
-        child: SvgPicture.asset(
-          "images/bell.svg",
-          width: 30,
-          height: 30,
-        ),
-      ),
+          angle: radians(randAngle()),
+          child: Text(
+            randImage(),
+            style: TextStyle(fontSize: randomFontSize()),
+          )),
     );
   }
 
   double randAngle() {
     return rng.nextInt(360).toDouble();
+  }
+
+  String randImage() {
+    return images[rng.nextInt(images.length)];
+  }
+
+  double randomFontSize() {
+    return ((rng.nextInt(4) + 2) * 6).toDouble();
   }
 }

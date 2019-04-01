@@ -1,5 +1,6 @@
 # clickapair
-pair match gaming, entry into flutter create contest
+
+Pair match gaming, entry into flutter create contest
 
 Inspired by "pica pair" which is itself based on "spot it".
 
@@ -15,9 +16,11 @@ The magic count:
 find . -name "*.dart" | xargs cat | wc -c
 ```
 
+Card data from: https://stackoverflow.com/a/31154452/85472
+
 ## Refs:
 
-https://www.google.com/search?q=spot+it+game+alogrithm&oq=spot+it+game+alogrithm
+Turns out the math behidn this seemingly simple childresn cards game is actually very interesting...
 
 https://stackoverflow.com/questions/6240113/what-are-the-mathematical-computational-principles-behind-this-game
 

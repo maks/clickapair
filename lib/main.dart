@@ -6,12 +6,9 @@ import 'package:vector_math/vector_math.dart' show radians;
 
 void main() => runApp(MyApp());
 
-const name = 'Click-A-Pair';
-
+const name = '📱Click-A-Pair';
 final rng = math.Random();
-
 int roundMatch;
-
 const images = [
   "❤️️",
   "🙂",
@@ -31,7 +28,7 @@ const images = [
   "⚽️",
   "🏆",
   "🏎",
-  "🥇",
+  "🃏",
   "🏁",
   "🇦🇺",
   "💯",
@@ -39,7 +36,7 @@ const images = [
   "📡",
   "📺",
   "⏰",
-  "🧦",
+  "✏️",
   "💎",
   "🕶",
   "💾",
@@ -47,7 +44,7 @@ const images = [
   "🔑",
   "💡",
   "🏊‍",
-  "♀",
+  "🦄",
   "️🎲",
   "🎱",
   "🏠",
@@ -55,13 +52,13 @@ const images = [
   "🐱",
   "🐧",
   "🐦",
-  "🦕",
-  "🦆",
+  "🐔",
+  "🐞",
   "🦀",
-  "🛷",
+  "📱",
   "🚜",
   "⚓",
-  "️🥝",
+  "️🍍",
   "🍏",
   "🍓",
   "🍒",
@@ -150,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               );
             } else {
-              return Text("Loading...");
+              return Text(name);
             }
           }),
     );
@@ -230,13 +227,13 @@ class CardItem extends StatelessWidget {
   }
 
   double _randomFontSize() {
-    return ((rng.nextInt(4) + 2) * 6).toDouble();
+    return ((rng.nextInt(4) * 7) + 24).toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.all(16.0),
       child: Transform.rotate(
           angle: radians(_randAngle()),
           child: GestureDetector(

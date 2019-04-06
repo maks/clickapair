@@ -172,28 +172,37 @@ class GameCard extends StatelessWidget {
     print("Card $cardName : $items");
 
     return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: <Widget>[
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                CardRow(
-                  cardName: cardName,
-                  rowItems: items.sublist(0, 3),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    CardRow(
+                      cardName: cardName,
+                      rowItems: items.sublist(0, 3),
+                    ),
+                    CardRow(
+                      cardName: cardName,
+                      rowItems: items.sublist(3, 6),
+                    ),
+                    CardRow(
+                      cardName: cardName,
+                      rowItems: items.sublist(6, 8),
+                    ),
+                  ],
                 ),
-                CardRow(
-                  cardName: cardName,
-                  rowItems: items.sublist(3, 6),
-                ),
-                CardRow(
-                  cardName: cardName,
-                  rowItems: items.sublist(6, 8),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
+          Positioned(
+            right: 14.0,
+            bottom: 14.0,
+            child: CardScore(name: cardName),
+          )
         ],
       ),
     );
@@ -208,10 +217,15 @@ class CardScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Align(
-          alignment: Alignment.topRight,
-          child: Text("${this.name}:\n ${score[name]}")),
-    );
+        child: Align(
+      alignment: Alignment.topRight,
+      child: Text(
+        "${this.name}:\n ${score[name]}",
+        style: TextStyle(
+          fontSize: 18.0,
+        ),
+      ),
+    ));
   }
 }
 

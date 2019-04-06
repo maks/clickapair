@@ -133,22 +133,21 @@ class _MyHomePageState extends State<MyHomePage> {
               roundMatch = roundItem(itemsA, itemsB);
               print("Match: $roundMatch");
 
-              return Center(
-                child: Column(
-                  children: <Widget>[
-                    GameCard(
-                      cardName: score.keys.first,
-                      items: itemsA,
-                    ),
-                    Divider(
-                      color: Colors.black,
-                    ),
-                    GameCard(
-                      cardName: score.keys.last,
-                      items: itemsB,
-                    ),
-                  ],
-                ),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  GameCard(
+                    cardName: score.keys.first,
+                    items: itemsA,
+                  ),
+                  Divider(
+                    color: Colors.black,
+                  ),
+                  GameCard(
+                    cardName: score.keys.last,
+                    items: itemsB,
+                  ),
+                ],
               );
             } else {
               return Text(name);
@@ -172,26 +171,31 @@ class GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Card $cardName : $items");
 
-    return Row(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            new CardRow(
-              cardName: cardName,
-              rowItems: items.sublist(0, 3),
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                CardRow(
+                  cardName: cardName,
+                  rowItems: items.sublist(0, 3),
+                ),
+                CardRow(
+                  cardName: cardName,
+                  rowItems: items.sublist(3, 6),
+                ),
+                CardRow(
+                  cardName: cardName,
+                  rowItems: items.sublist(6, 8),
+                ),
+              ],
             ),
-            new CardRow(
-              cardName: cardName,
-              rowItems: items.sublist(3, 6),
-            ),
-            new CardRow(
-              cardName: cardName,
-              rowItems: items.sublist(6, 8),
-            ),
-          ],
-        ),
-        CardScore(name: cardName),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -203,8 +207,10 @@ class CardScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Text("${this.name}: ${score[name]}"),
+    return Container(
+      child: Align(
+          alignment: Alignment.topRight,
+          child: Text("${this.name}:\n ${score[name]}")),
     );
   }
 }
@@ -218,6 +224,7 @@ class CardRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         CardItem(
           index: rowItems[0],
@@ -249,39 +256,36 @@ class CardItem extends StatelessWidget {
   }
 
   double _randomFontSize() {
-    return ((rng.nextInt(4) * 7) + 24).toDouble();
+    return ((rng.nextInt(4) * 9) + 20).toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Transform.rotate(
-          angle: radians(_randAngle()),
-          child: GestureDetector(
-            onTap: () {
-              if (index == roundMatch) {
-                score[name]++;
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("$name Wins!"),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: Text("Next Round!"),
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        ],
-                      );
-                    });
-              }
-            },
-            child: Text(
-              images[index],
-              style: TextStyle(fontSize: _randomFontSize()),
-            ),
-          )),
-    );
+    return Transform.rotate(
+        angle: radians(_randAngle()),
+        child: GestureDetector(
+          onTap: () {
+            if (index == roundMatch) {
+              score[name]++;
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("$name Wins!"),
+                      actions: <Widget>[
+                        new FlatButton(
+                          child: Text("Next Round!"),
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      ],
+                    );
+                  });
+            }
+          },
+          child: Text(
+            images[index],
+            style: TextStyle(fontSize: _randomFontSize()),
+          ),
+        ));
   }
 }

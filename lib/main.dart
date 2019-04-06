@@ -95,13 +95,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<List<int>> cards;
 
-  Future<String> loadCards(BuildContext context) async {
+  int roundMatch;
+
+  Future<String> _loadCards(BuildContext context) async {
     return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
   }
 
-  List<int> randomCard() {
+  List<int> _randomCard() {
     return this.cards?.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
         [];
+  }
+
+  int roundItem(List<int> a, List<int> b) {
+    return a.firstWhere((x) => b.contains(x));
   }
 
   @override
@@ -111,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: FutureBuilder(
-          future: loadCards(context),
+          future: _loadCards(context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final d = List<dynamic>.from(json.decode(snapshot.data));
@@ -121,19 +127,24 @@ class _MyHomePageState extends State<MyHomePage> {
               }).toList();
 
               // TODO: need to make sure random doesn't get 2 identical cards from deck
+              final itemsA = _randomCard();
+              final itemsB = _randomCard();
+
+              print("Match: ${roundItem(itemsA, itemsB)}");
+
               return Center(
                 child: Column(
                   children: <Widget>[
                     GameCard(
                       cardName: "A",
-                      items: randomCard(),
+                      items: itemsA,
                     ),
                     Divider(
                       color: Colors.black,
                     ),
                     GameCard(
                       cardName: "B",
-                      items: randomCard(),
+                      items: itemsB,
                     ),
                   ],
                 ),

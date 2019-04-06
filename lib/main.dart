@@ -136,14 +136,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     GameCard(
-                      cardName: "A",
+                      cardName: "Player 1",
                       items: itemsA,
                     ),
                     Divider(
                       color: Colors.black,
                     ),
                     GameCard(
-                      cardName: "B",
+                      cardName: "Player 2",
                       items: itemsB,
                     ),
                   ],
@@ -241,9 +241,20 @@ class CardItem extends StatelessWidget {
           angle: radians(_randAngle()),
           child: GestureDetector(
             onTap: () {
-              print("Tapped: $index");
               if (index == roundMatch) {
-                print("WINNER: $name !");
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("$name Wins!"),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: Text("Next Round!"),
+                            onPressed: () => Navigator.of(context).pop(),
+                          )
+                        ],
+                      );
+                    });
               }
             },
             child: Text(

@@ -70,8 +70,6 @@ const images = [
   "🎨",
 ];
 
-var cards;
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -95,14 +93,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<List<int>> cardDeck;
+  List<List<int>> cards;
 
   Future<String> loadCards(BuildContext context) async {
     return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
   }
 
   List<int> randomCard() {
-    return this.cardDeck?.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
+    return this.cards?.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
         [];
   }
 
@@ -117,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final d = List<dynamic>.from(json.decode(snapshot.data));
-              cardDeck = d.map((card) {
+              cards = d.map((card) {
                 final a = List<int>.from(card);
                 return a;
               }).toList();

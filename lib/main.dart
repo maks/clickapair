@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart' show radians;
@@ -5,6 +7,8 @@ import 'package:vector_math/vector_math.dart' show radians;
 void main() => runApp(MyApp());
 
 const name = 'Click-A-Pair';
+
+final rng = math.Random();
 
 const images = [
   "❤️️",
@@ -21,7 +25,52 @@ const images = [
   "🚦",
   "🚗",
   "🐧",
+  "🏀️",
+  "⚽️",
+  "🏆",
+  "🏎",
+  "🥇",
+  "🏁",
+  "🇦🇺",
+  "💯",
+  "🔔",
+  "📡",
+  "📺",
+  "⏰",
+  "🧦",
+  "💎",
+  "🕶",
+  "💾",
+  "🔔",
+  "🔑",
+  "💡",
+  "🏊‍",
+  "♀",
+  "️🎲",
+  "🎱",
+  "🏠",
+  "🏛",
+  "🐱",
+  "🐧",
+  "🐦",
+  "🦕",
+  "🦆",
+  "🦀",
+  "🛷",
+  "🚜",
+  "⚓",
+  "️🥝",
+  "🍏",
+  "🍓",
+  "🍒",
+  "🍭",
+  "🥕",
+  "🕰",
+  "🎻",
+  "🎨",
 ];
+
+var cards;
 
 class MyApp extends StatelessWidget {
   @override
@@ -46,34 +95,75 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<List<int>> cardDeck;
+
+  Future<String> loadCards(BuildContext context) async {
+    return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
+  }
+
+  List<int> randomCard() {
+    return this.cardDeck?.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
+        [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            GameCard(cardName: "A"),
-            Divider(
-              color: Colors.black,
-            ),
-            GameCard(cardName: "B"),
-          ],
-        ),
-      ),
+      body: FutureBuilder(
+          future: loadCards(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final data = json.decode(snapshot.data);
+
+              final d = List<dynamic>.from(data);
+              cardDeck = d.map((card) {
+                final a = List<int>.from(card);
+                return a;
+              }).toList();
+
+              // TODO: need to make sure random doesn't get 2 identical cards from deck
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    GameCard(
+                      cardName: "A",
+                      items: randomCard(),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    GameCard(
+                      cardName: "B",
+                      items: randomCard(),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Text("Loading...");
+            }
+          }),
     );
   }
 }
 
 class GameCard extends StatelessWidget {
   final String cardName;
+  final List<int> items;
 
-  const GameCard({Key key, this.cardName}) : super(key: key);
+  const GameCard({
+    Key key,
+    this.cardName,
+    this.items,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("Card $cardName : $items");
+
     return Column(
       children: <Widget>[
         new CardRow(
@@ -96,7 +186,6 @@ class GameCard extends StatelessWidget {
 class CardRow extends StatelessWidget {
   final int offset;
   final String cardName;
-  final rng = math.Random();
 
   CardRow({Key key, this.offset, this.cardName}) : super(key: key);
 

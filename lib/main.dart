@@ -95,51 +95,74 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  loadCards(BuildContext context) async {
-    String data =
-        await DefaultAssetBundle.of(context).loadString("assets/cards.json");
-    final jsonResult = json.decode(data);
+  List<List<int>> cardDeck;
 
-    cards = jsonResult;
-    print("loaded cards");
-    print("Card 0: ${jsonResult[3][4]}");
+  Future<String> loadCards(BuildContext context) async {
+    return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
+  }
+
+  List<int> randomCard() {
+    return this.cardDeck?.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
+        [];
   }
 
   @override
   Widget build(BuildContext context) {
-    loadCards(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            GameCard(cardName: "A"),
-            Divider(
-              color: Colors.black,
-            ),
-            GameCard(cardName: "B"),
-          ],
-        ),
-      ),
+      body: FutureBuilder(
+          future: loadCards(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final data = json.decode(snapshot.data);
+
+              final d = List<dynamic>.from(data);
+              cardDeck = d.map((card) {
+                final a = List<int>.from(card);
+                return a;
+              }).toList();
+
+              // TODO: need to make sure random doesn't get 2 identical cards from deck
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    GameCard(
+                      cardName: "A",
+                      items: randomCard(),
+                    ),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    GameCard(
+                      cardName: "B",
+                      items: randomCard(),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Text("Loading...");
+            }
+          }),
     );
   }
 }
 
 class GameCard extends StatelessWidget {
   final String cardName;
+  final List<int> items;
 
-  const GameCard({Key key, this.cardName}) : super(key: key);
-
-  List<int> randomCard() {
-    return cards[rng.nextInt(55)].map((c) => (c as int)).toList();
-  }
+  const GameCard({
+    Key key,
+    this.cardName,
+    this.items,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("Card:"); // ${randomCard()}");
+    print("Card $cardName : $items");
 
     return Column(
       children: <Widget>[

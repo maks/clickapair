@@ -198,9 +198,8 @@ class GameCard extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            right: 14.0,
-            bottom: 14.0,
+          Align(
+            alignment: Alignment(1, 1),
             child: CardScore(name: cardName),
           )
         ],
@@ -216,16 +215,15 @@ class CardScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Align(
-      alignment: Alignment.topRight,
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
       child: Text(
         "${this.name}:\n ${score[name]}",
         style: TextStyle(
-          fontSize: 18.0,
+          fontSize: 20.0,
         ),
       ),
-    ));
+    );
   }
 }
 

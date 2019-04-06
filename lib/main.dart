@@ -9,6 +9,10 @@ void main() => runApp(MyApp());
 const name = '📱Click-A-Pair';
 final rng = math.Random();
 int roundMatch;
+Map<String, int> score = {
+  "Player 1": 0,
+  "Player 2": 0,
+};
 const images = [
   "❤️️",
   "🙂",
@@ -23,7 +27,7 @@ const images = [
   "🚢",
   "🚦",
   "🚗",
-  "🐧",
+  "🎁",
   "🏀️",
   "⚽️",
   "🏆",
@@ -63,7 +67,7 @@ const images = [
   "🍓",
   "🍒",
   "🍭",
-  "🥕",
+  "🌶",
   "🕰",
   "🎻",
   "🎨",
@@ -133,14 +137,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     GameCard(
-                      cardName: "Player 1",
+                      cardName: score.keys.first,
                       items: itemsA,
                     ),
                     Divider(
                       color: Colors.black,
                     ),
                     GameCard(
-                      cardName: "Player 2",
+                      cardName: score.keys.last,
                       items: itemsB,
                     ),
                   ],
@@ -168,21 +172,39 @@ class GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Card $cardName : $items");
 
-    return Column(
+    return Row(
       children: <Widget>[
-        new CardRow(
-          cardName: cardName,
-          rowItems: items.sublist(0, 3),
+        Column(
+          children: <Widget>[
+            new CardRow(
+              cardName: cardName,
+              rowItems: items.sublist(0, 3),
+            ),
+            new CardRow(
+              cardName: cardName,
+              rowItems: items.sublist(3, 6),
+            ),
+            new CardRow(
+              cardName: cardName,
+              rowItems: items.sublist(6, 8),
+            ),
+          ],
         ),
-        new CardRow(
-          cardName: cardName,
-          rowItems: items.sublist(3, 6),
-        ),
-        new CardRow(
-          cardName: cardName,
-          rowItems: items.sublist(6, 8),
-        ),
+        CardScore(name: cardName),
       ],
+    );
+  }
+}
+
+class CardScore extends StatelessWidget {
+  final String name;
+
+  CardScore({Key key, this.name}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Text("${this.name}: ${score[name]}"),
     );
   }
 }
@@ -239,6 +261,7 @@ class CardItem extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               if (index == roundMatch) {
+                score[name]++;
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {

@@ -116,9 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
           future: loadCards(context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              final data = json.decode(snapshot.data);
-
-              final d = List<dynamic>.from(data);
+              final d = List<dynamic>.from(json.decode(snapshot.data));
               cardDeck = d.map((card) {
                 final a = List<int>.from(card);
                 return a;
@@ -167,16 +165,16 @@ class GameCard extends StatelessWidget {
     return Column(
       children: <Widget>[
         new CardRow(
-          offset: 0,
           cardName: cardName,
+          rowItems: items.sublist(0, 3),
         ),
         new CardRow(
-          offset: 3,
           cardName: cardName,
+          rowItems: items.sublist(3, 6),
         ),
         new CardRow(
-          offset: 6,
           cardName: cardName,
+          rowItems: items.sublist(6, 8),
         ),
       ],
     );
@@ -184,19 +182,18 @@ class GameCard extends StatelessWidget {
 }
 
 class CardRow extends StatelessWidget {
-  final int offset;
   final String cardName;
+  final List<int> rowItems;
 
-  CardRow({Key key, this.offset, this.cardName}) : super(key: key);
+  CardRow({Key key, this.cardName, this.rowItems}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int count = offset;
     return Row(
       children: <Widget>[
-        getCardItem(count++),
-        getCardItem(count++),
-        getCardItem(count++),
+        getCardItem(rowItems[0]),
+        getCardItem(rowItems[1]),
+        rowItems.length == 3 ? getCardItem(rowItems[2]) : Text(""),
       ],
     );
   }
@@ -206,19 +203,20 @@ class CardRow extends StatelessWidget {
       padding: const EdgeInsets.all(32.0),
       child: Transform.rotate(
           angle: radians(randAngle()),
-          child: Text(
-            randImage(),
-            style: TextStyle(fontSize: randomFontSize()),
+          child: GestureDetector(
+            onTap: () {
+              print("Tapped: $index");
+            },
+            child: Text(
+              images[index],
+              style: TextStyle(fontSize: randomFontSize()),
+            ),
           )),
     );
   }
 
   double randAngle() {
     return rng.nextInt(360).toDouble();
-  }
-
-  String randImage() {
-    return images[rng.nextInt(images.length)];
   }
 
   double randomFontSize() {

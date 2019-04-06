@@ -179,7 +179,7 @@ class GameCard extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CardRow(
                       cardName: cardName,
@@ -235,24 +235,27 @@ class CardRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        CardItem(
-          index: rowItems[0],
-          name: cardName,
-        ),
-        CardItem(
-          index: rowItems[1],
-          name: cardName,
-        ),
-        rowItems.length == 3
-            ? CardItem(
-                index: rowItems[2],
-                name: cardName,
-              )
-            : Text(""),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          CardItem(
+            index: rowItems[0],
+            name: cardName,
+          ),
+          CardItem(
+            index: rowItems[1],
+            name: cardName,
+          ),
+          rowItems.length == 3
+              ? CardItem(
+                  index: rowItems[2],
+                  name: cardName,
+                )
+              : Text(""),
+        ],
+      ),
     );
   }
 }
@@ -268,7 +271,7 @@ class CardItem extends StatelessWidget {
   }
 
   double _randomFontSize() {
-    return ((rng.nextInt(4) * 9) + 20).toDouble();
+    return ((rng.nextInt(4) * 9) + 22).toDouble();
   }
 
   @override

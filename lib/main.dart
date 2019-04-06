@@ -10,6 +10,8 @@ const name = 'Click-A-Pair';
 
 final rng = math.Random();
 
+int roundMatch;
+
 const images = [
   "❤️️",
   "🙂",
@@ -95,8 +97,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<List<int>> cards;
 
-  int roundMatch;
-
   Future<String> _loadCards(BuildContext context) async {
     return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
   }
@@ -129,8 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
               // TODO: need to make sure random doesn't get 2 identical cards from deck
               final itemsA = _randomCard();
               final itemsB = _randomCard();
-
-              print("Match: ${roundItem(itemsA, itemsB)}");
+              roundMatch = roundItem(itemsA, itemsB);
+              print("Match: $roundMatch");
 
               return Center(
                 child: Column(
@@ -200,35 +200,57 @@ class CardRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        getCardItem(rowItems[0]),
-        getCardItem(rowItems[1]),
-        rowItems.length == 3 ? getCardItem(rowItems[2]) : Text(""),
+        CardItem(
+          index: rowItems[0],
+          name: cardName,
+        ),
+        CardItem(
+          index: rowItems[1],
+          name: cardName,
+        ),
+        rowItems.length == 3
+            ? CardItem(
+                index: rowItems[2],
+                name: cardName,
+              )
+            : Text(""),
       ],
     );
   }
+}
 
-  Widget getCardItem(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Transform.rotate(
-          angle: radians(randAngle()),
-          child: GestureDetector(
-            onTap: () {
-              print("Tapped: $index");
-            },
-            child: Text(
-              images[index],
-              style: TextStyle(fontSize: randomFontSize()),
-            ),
-          )),
-    );
-  }
+class CardItem extends StatelessWidget {
+  final int index;
+  final String name;
 
-  double randAngle() {
+  const CardItem({Key key, this.index, this.name}) : super(key: key);
+
+  double _randAngle() {
     return rng.nextInt(360).toDouble();
   }
 
-  double randomFontSize() {
+  double _randomFontSize() {
     return ((rng.nextInt(4) + 2) * 6).toDouble();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Transform.rotate(
+          angle: radians(_randAngle()),
+          child: GestureDetector(
+            onTap: () {
+              print("Tapped: $index");
+              if (index == roundMatch) {
+                print("WINNER: $name !");
+              }
+            },
+            child: Text(
+              images[index],
+              style: TextStyle(fontSize: _randomFontSize()),
+            ),
+          )),
+    );
   }
 }

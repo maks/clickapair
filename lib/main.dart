@@ -90,11 +90,11 @@ class _GameBoardState extends State<GameBoard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             GameCard(
-              cardName: score.keys.first,
+              id: score.keys.first,
               items: itemsA,
             ),
             Divider(color: Colors.black,),
-            GameCard(cardName: score.keys.last,items: itemsB,),
+            GameCard(id: score.keys.last,items: itemsB,),
           ],
         ),
       ),
@@ -103,11 +103,11 @@ class _GameBoardState extends State<GameBoard> {
 }
 
 class GameCard extends StatelessWidget {
-  final String cardName;
+  final String id;
   final List<int> items;
-  const GameCard({Key key,this.cardName,this.items,}) : super(key: key);
+  const GameCard({Key key,this.id,this.items,}) : super(key: key);
 
-  _getRow(name, items, start, end) => CardRow(cardName:name,rowItems:items.sublist(start, end));
+  _getRow(name, items, start, end) => CardRow(id:name,rowItems:items.sublist(start, end));
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +121,9 @@ class GameCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _getRow(cardName, items, 0, 3),
-                    _getRow(cardName, items, 3, 6),
-                    _getRow(cardName, items, 6, 8),
+                    _getRow(id, items, 0, 3),
+                    _getRow(id, items, 3, 6),
+                    _getRow(id, items, 6, 8),
                   ],
                 ),
               ),
@@ -131,14 +131,13 @@ class GameCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment(1, 1),
-            child: CardScore(name: cardName),
+            child: CardScore(name: id),
           )
         ],
       ),
     );
   }
 }
-
 class CardScore extends StatelessWidget {
   final String name;
   CardScore({Key key, this.name}) : super(key: key);
@@ -157,9 +156,9 @@ class CardScore extends StatelessWidget {
 }
 
 class CardRow extends StatelessWidget {
-  final String cardName;
+  final String id;
   final List<int> rowItems;
-  CardRow({Key key, this.cardName, this.rowItems}) : super(key: key);
+  CardRow({Key key, this.id, this.rowItems}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -169,16 +168,16 @@ class CardRow extends StatelessWidget {
         children: <Widget>[
           CardItem(
             index: rowItems[0],
-            name: cardName,
+            name: id,
           ),
           CardItem(
             index: rowItems[1],
-            name: cardName,
+            name: id,
           ),
           rowItems.length == 3
               ? CardItem(
                   index: rowItems[2],
-                  name: cardName,
+                  name: id,
                 )
               : Text(""),
         ],

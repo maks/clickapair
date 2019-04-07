@@ -6,74 +6,17 @@ import 'package:vector_math/vector_math.dart' show radians;
 
 void main() => runApp(App());
 
-const appName = '📱Click-A-Pair';
+const appName = 'Click-A-Pair';
 final rng = math.Random();
 
-const images = [
-  "❤️️",
-  "🙂",
-  "🌻",
-  "🏝",
-  "⚡️",
-  "☘",
-  "☀️",
-  "🌏",
-  "🚀",
-  "🚲",
-  "🚢",
-  "🚦",
-  "🚗",
-  "🎁",
-  "🏀️",
-  "⚽️",
-  "🏆",
-  "🏎",
-  "🃏",
-  "🏁",
-  "🇦🇺",
-  "💯",
-  "🔔",
-  "📡",
-  "📺",
-  "⏰",
-  "✏️",
-  "💎",
-  "🕶",
-  "💾",
-  "🔔",
-  "🔑",
-  "💡",
-  "🏊‍",
-  "🦄",
-  "️🎲",
-  "🎱",
-  "🏠",
-  "🏛",
-  "🐱",
-  "🐧",
-  "🐦",
-  "🐔",
-  "🐞",
-  "🦀",
-  "📱",
-  "🚜",
-  "⚓",
-  "️🍍",
-  "🍏",
-  "🍓",
-  "🍒",
-  "🍭",
-  "🌶",
-  "🕰",
-  "🎻",
-  "🎨",
+List<String> images = [
+"❤️️","🙂","🌻","🏝","⚡️","☘","☀️","🌏","🚀","🚲","🚢","🚦","🚗","🎁","🏀️","⚽️","🏆","🏎","🃏","🏁","🇦🇺","💯","🔔","📡","📺","⏰","✏️","💎","🕶","💾","🔔","🔑","💡","🏊‍","🦄","️🎲","🎱","🏠","🏛","🐱","🐧","🐦","🐔","🐞","🦀","📱","🚜","⚓","️🍍","🍏","🍓","🍒","🍭","🌶","🕰","🎻","🎨",
 ];
 
 class App extends StatelessWidget {
   App({Key key}) : super(key: key);
 
   Future<String> _loadCards(BuildContext context) async {
-    print("loading card data");
     return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
   }
 
@@ -111,7 +54,6 @@ class GameStateProvider extends InheritedWidget {
   Map<String, int> get score => gameState.score;
 
   void updateScore(String playerName) {
-    print("UPDATE SCORE for $playerName !");
     gameState.setState(() {
       gameState.score[playerName]++;
     });
@@ -158,11 +100,9 @@ class _GameBoardState extends State<GameBoard> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: chance that identical are cards chosen
     final itemsA = _randomCard(context);
     final itemsB = _randomCard(context);
     roundMatchItem = _roundItem(itemsA, itemsB);
-    print("Match: $roundMatchItem");
 
     return GameStateProvider(
       gameState: this,
@@ -203,8 +143,6 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Card $cardName : $items");
-
     return Expanded(
       child: Stack(
         children: <Widget>[

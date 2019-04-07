@@ -57,5 +57,5 @@ const CardItem({Key key,this.index,this.name}):super(key:key);
 double _randAngle(){return rng.nextInt(360).toDouble();}
 double _randomFontSize(){return ((rng.nextInt(4)*9)+22).toDouble();}
 @override
-Widget build(BuildContext context){return Transform.rotate(angle:radians(_randAngle()),child:GestureDetector(onTap:(){if(GameStateProvider.of(context).isMatchingRoundItem(index)){GameStateProvider.of(context).updateScore(this.name);showDialog(context:context,builder:(BuildContext context){return AlertDialog(title:Text("$name Wins!"),actions:<Widget>[new FlatButton(child:Text("Next Round!"),onPressed:() => Navigator.of(context).pop(),)],);});}},child:Text(images[index],style:TextStyle(fontSize:_randomFontSize()),),));}
+Widget build(BuildContext context){return Transform.rotate(angle:radians(_randAngle()),child:GestureDetector(onTap:(){if(GameStateProvider.of(context).isMatchingRoundItem(index)){GameStateProvider.of(context).updateScore(this.name);showDialog(context:context,builder:(BuildContext context){return AlertDialog(title:Text("$name Wins!"),actions:<Widget>[new FlatButton(child:Text("Next Round!"),onPressed:() => Navigator.of(context).pop(),)],);});}},child:Text(images[index],style:TextStyle(fontSize:_randomFontSize(),),),),);}
 }

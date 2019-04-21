@@ -1,26 +1,39 @@
 # clickapair
 
-Pair match gaming, entry into flutter create contest
+This is a pair match gaming for __TWO__ human players on a single device.
 
-Inspired by "pica pair" which is itself based on "spot it".
+The app displays 2 "cards" at once, the first player to click on the item that is the same on both cards wins the round.
+Unlike the card game there 
+
+It was *inspired* by the childrens "pica pair" card game which my daughters love playing, which is itself based on ["Spot It"](https://boardgamegeek.com/boardgame/63268/spot-it).
+
+The original game is:
 
 * 55 "card" combinations
 * total of 57 symbols (pictures)
 * each card has 8 symbols of differing sizes and orientation
-* only 1 symbol is the same across any 2 cards
-
-Artwork from [GCOmpris-gtk](https://github.com/gcompris/GCompris-gtk)
+* *Most importantly:* only 1 symbol is the same across any 2 cards
 
 The magic count:
 ```
-find . -name "*.dart" | xargs cat | wc -c
+$ find . -name "*.dart" | xargs cat | wc -c
+5110
 ```
+
+## Acknowledgements
 
 Card data from: https://stackoverflow.com/a/31154452/85472
 
-## Refs:
+## Known Issues:
 
-Turns out the math behidn this seemingly simple childresn cards game is actually very interesting...
+* there is no way to easily reset the game state short of restarting the app
+* the layout of the game card items is not ideal and a better custom layout instead of just rows-columns is needed
+* better way of selecting sizes and rotations of items within a card instead of just the arbitrary random numbers currently used
+* "advanced mode" with a timer and scoring based on the time taken per each round win 
+
+## Further References:
+
+It turns out that the math behind this seemingly simple childrens cards game is actually very interesting, being related to non-Eucliean geometry...
 
 https://stackoverflow.com/questions/6240113/what-are-the-mathematical-computational-principles-behind-this-game
 

@@ -1,15 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:vector_math/vector_math.dart' show radians;
 
 void main() => runApp(App());
-
-const appName = '📱Click-A-Pair';
+const appName = 'Click-A-Pair';
 final rng = math.Random();
-
-const images = [
+const List<String> images = [
   "❤️️",
   "🙂",
   "🌻",
@@ -40,7 +37,7 @@ const images = [
   "💎",
   "🕶",
   "💾",
-  "🔔",
+  "👒",
   "🔑",
   "💡",
   "🏊‍",
@@ -71,9 +68,7 @@ const images = [
 
 class App extends StatelessWidget {
   App({Key key}) : super(key: key);
-
-  Future<String> _loadCards(BuildContext context) async {
-    print("loading card data");
+  Future<String> _load(BuildContext context) async {
     return await DefaultAssetBundle.of(context).loadString('assets/cards.json');
   }
 
@@ -85,12 +80,11 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder<Object>(
-          future: _loadCards(context),
+          future: _load(context),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final d = List<dynamic>.from(json.decode(snapshot.data));
               final cardsData = d.map((card) => List<int>.from(card)).toList();
-
               return GameBoard(
                 cards: cardsData,
               );
@@ -104,21 +98,16 @@ class App extends StatelessWidget {
 
 class GameStateProvider extends InheritedWidget {
   final _GameBoardState gameState;
-
   GameStateProvider({Key key, child, this.gameState})
       : super(key: key, child: child);
-
   Map<String, int> get score => gameState.score;
-
   void updateScore(String playerName) {
-    print("UPDATE SCORE for $playerName !");
     gameState.setState(() {
       gameState.score[playerName]++;
     });
   }
 
   bool isMatchingRoundItem(int index) => index == gameState.roundMatchItem;
-
   static GameStateProvider of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(GameStateProvider)
         as GameStateProvider);
@@ -130,12 +119,10 @@ class GameStateProvider extends InheritedWidget {
 
 class GameBoard extends StatefulWidget {
   final List<List<int>> cards;
-
   GameBoard({
     Key key,
     this.cards,
   }) : super(key: key);
-
   @override
   _GameBoardState createState() => _GameBoardState();
 }
@@ -146,10 +133,8 @@ class _GameBoardState extends State<GameBoard> {
     "Player 1": 0,
     "Player 2": 0,
   };
-
-  List<int> _randomCard(BuildContext context) {
-    return widget.cards.elementAt(rng.nextInt(55))?.map((c) => c)?.toList() ??
-        [];
+  List<int> _randomCard(int idx) {
+    return widget.cards.elementAt(idx).map((c) => c).toList();
   }
 
   int _roundItem(List<int> a, List<int> b) {
@@ -158,12 +143,14 @@ class _GameBoardState extends State<GameBoard> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: chance that identical are cards chosen
-    final itemsA = _randomCard(context);
-    final itemsB = _randomCard(context);
+    final a = rng.nextInt(55);
+    int b;
+    do {
+      b = rng.nextInt(55);
+    } while (a == b);
+    final itemsA = _randomCard(a);
+    final itemsB = _randomCard(b);
     roundMatchItem = _roundItem(itemsA, itemsB);
-    print("Match: $roundMatchItem");
-
     return GameStateProvider(
       gameState: this,
       child: Scaffold(
@@ -174,14 +161,14 @@ class _GameBoardState extends State<GameBoard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             GameCard(
-              cardName: score.keys.first,
+              id: score.keys.first,
               items: itemsA,
             ),
             Divider(
               color: Colors.black,
             ),
             GameCard(
-              cardName: score.keys.last,
+              id: score.keys.last,
               items: itemsB,
             ),
           ],
@@ -192,19 +179,17 @@ class _GameBoardState extends State<GameBoard> {
 }
 
 class GameCard extends StatelessWidget {
-  final String cardName;
+  final String id;
   final List<int> items;
-
   const GameCard({
     Key key,
-    this.cardName,
+    this.id,
     this.items,
   }) : super(key: key);
-
+  _getRow(name, items, start, end) =>
+      CardRow(id: name, rowItems: items.sublist(start, end));
   @override
   Widget build(BuildContext context) {
-    print("Card $cardName : $items");
-
     return Expanded(
       child: Stack(
         children: <Widget>[
@@ -215,18 +200,9 @@ class GameCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CardRow(
-                      cardName: cardName,
-                      rowItems: items.sublist(0, 3),
-                    ),
-                    CardRow(
-                      cardName: cardName,
-                      rowItems: items.sublist(3, 6),
-                    ),
-                    CardRow(
-                      cardName: cardName,
-                      rowItems: items.sublist(6, 8),
-                    ),
+                    _getRow(id, items, 0, 3),
+                    _getRow(id, items, 3, 6),
+                    _getRow(id, items, 6, 8),
                   ],
                 ),
               ),
@@ -234,7 +210,7 @@ class GameCard extends StatelessWidget {
           ),
           Align(
             alignment: Alignment(1, 1),
-            child: CardScore(name: cardName),
+            child: CardScore(name: id),
           )
         ],
       ),
@@ -244,15 +220,13 @@ class GameCard extends StatelessWidget {
 
 class CardScore extends StatelessWidget {
   final String name;
-
   CardScore({Key key, this.name}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 8.0),
       child: Text(
-        "${this.name}:\n ${GameStateProvider.of(context).score[name]}",
+        "${this.name}:\n${GameStateProvider.of(context).score[name]}",
         style: TextStyle(
           fontSize: 20.0,
         ),
@@ -262,11 +236,9 @@ class CardScore extends StatelessWidget {
 }
 
 class CardRow extends StatelessWidget {
-  final String cardName;
+  final String id;
   final List<int> rowItems;
-
-  CardRow({Key key, this.cardName, this.rowItems}) : super(key: key);
-
+  CardRow({Key key, this.id, this.rowItems}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -276,16 +248,16 @@ class CardRow extends StatelessWidget {
         children: <Widget>[
           CardItem(
             index: rowItems[0],
-            name: cardName,
+            name: id,
           ),
           CardItem(
             index: rowItems[1],
-            name: cardName,
+            name: id,
           ),
           rowItems.length == 3
               ? CardItem(
                   index: rowItems[2],
-                  name: cardName,
+                  name: id,
                 )
               : Text(""),
         ],
@@ -297,9 +269,7 @@ class CardRow extends StatelessWidget {
 class CardItem extends StatelessWidget {
   final int index;
   final String name;
-
   const CardItem({Key key, this.index, this.name}) : super(key: key);
-
   double _randAngle() {
     return rng.nextInt(360).toDouble();
   }
@@ -311,30 +281,33 @@ class CardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
-        angle: radians(_randAngle()),
-        child: GestureDetector(
-          onTap: () {
-            if (GameStateProvider.of(context).isMatchingRoundItem(index)) {
-              GameStateProvider.of(context).updateScore(this.name);
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("$name Wins!"),
-                      actions: <Widget>[
-                        new FlatButton(
-                          child: Text("Next Round!"),
-                          onPressed: () => Navigator.of(context).pop(),
-                        )
-                      ],
-                    );
-                  });
-            }
-          },
-          child: Text(
-            images[index],
-            style: TextStyle(fontSize: _randomFontSize()),
+      angle: radians(_randAngle()),
+      child: GestureDetector(
+        onTap: () {
+          if (GameStateProvider.of(context).isMatchingRoundItem(index)) {
+            GameStateProvider.of(context).updateScore(this.name);
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("$name Wins!"),
+                    actions: <Widget>[
+                      new FlatButton(
+                        child: Text("Next Round!"),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  );
+                });
+          }
+        },
+        child: Text(
+          images[index],
+          style: TextStyle(
+            fontSize: _randomFontSize(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
